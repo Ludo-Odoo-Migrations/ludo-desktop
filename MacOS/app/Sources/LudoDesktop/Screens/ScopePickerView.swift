@@ -208,8 +208,9 @@ struct ScopePickerView: View {
 
     private var summaryBar: some View {
         let s = app.resolved
+        let selectedOnly = s.selectedModelCount - s.autoIncludedDeps.count
         return HStack(spacing: 16) {
-            stat("\(s.selectedModelCount)", " of \(s.totalModelCount) models")
+            stat("\(selectedOnly)", " of \(s.totalModelCount) models")
             dot
             stat("+\(s.autoIncludedDeps.count)", " dependencies")
             dot

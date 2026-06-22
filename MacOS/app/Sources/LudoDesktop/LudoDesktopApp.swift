@@ -19,6 +19,12 @@ struct LudoDesktopApp: App {
                 .frame(minWidth: 980, minHeight: 660)
                 // Browser-redirect callback: ludo-desktop://auth/callback?code=...
                 .onOpenURL { url in auth.handleCallback(url) }
+                // Demo-only: walks every CTA when LUDO_AUTOPILOT=1 (inert otherwise).
+                .task {
+                    if Autopilot.isEnabled {
+                        await Autopilot(auth: auth, app: app, api: api).run()
+                    }
+                }
         }
         .windowToolbarStyle(.unified)
         .defaultSize(width: 1080, height: 760)
