@@ -9,6 +9,9 @@ DerivedData/
 *.xcodeproj/xcuserdata/
 .swiftpm/
 Pods/
+# XcodeGen output — regenerated from project.yml, not committed
+*.xcodeproj/
+MacOS/app/Sources/LudoDesktop/Support/Info.plist
 
 # .NET / WinUI (Windows app)
 bin/

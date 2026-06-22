@@ -40,7 +40,7 @@ broker access; not an admin/operator console (that is superadmin web).
 | State | `@Observable` (Observation framework) view models, MVVM |
 | Networking | `URLSession` async; **typed `Codable` models aligned to Contract A** |
 | Live events | SSE over `URLSession.bytes` (async line stream); auto-reconnect w/ backoff |
-| Auth | GitHub OAuth via `ASWebAuthenticationSession`; token in **Keychain** |
+| Auth | Browser-redirect GitHub OAuth + **PKCE** via `ASWebAuthenticationSession`, custom scheme `ludo-desktop://`; token in **Keychain** |
 | Persistence | Keychain (token) + small `UserDefaults`/SwiftData cache (last connection, UI prefs) |
 | Localization | String Catalogs (`.xcstrings`), **en + de** (see §10) |
 | Updates | Sparkle |
@@ -69,7 +69,9 @@ All under the authenticated BFF. Endpoints in **bold** are added by epic #94; ot
 
 | Purpose | Method · path | Notes |
 |---|---|---|
-| OAuth start / callback | GitHub OAuth (web) | token → Keychain |
+| Desktop auth start | `GET /auth/desktop/start?redirect_uri=ludo-desktop://auth/callback&code_challenge=…` | opens in browser; BFF brokers GitHub OAuth |
+| Desktop auth callback | redirect → `ludo-desktop://auth/callback?code=…` | app catches via custom scheme |
+| Desktop token exchange | `POST /auth/desktop/token` `{code, code_verifier}` | PKCE; returns bearer token → Keychain |
 | Current account | `GET /me` | account_id, locale, entitlements |
 | Connections / vault | `GET /connections`, `POST /connections` | source Odoo creds (vault-encrypted server-side) |
 | Run estimate / X-Ray | `POST /estimates` , `GET /estimates/{id}` | read-only scan; produces inventory |
@@ -89,9 +91,16 @@ sees the apps shape.
 Numbers map to prototype files. Each screen lists purpose · key components · states.
 
 ### 6.1 Sign in — `01_signin.png`
-- Purpose: authenticate via GitHub OAuth.
-- Components: brand, **Sign in with GitHub** (`ASWebAuthenticationSession`), endpoint hint.
-- States: idle · authenticating · error (network/denied). On success → Discovery/last view.
+- Purpose: authenticate via **browser-redirect** OAuth (the "like Claude" flow) — no in-app
+  password form.
+- Flow: tap **Sign in with GitHub** → `ASWebAuthenticationSession` opens the **system browser**
+  to `GET /auth/desktop/start` (carrying a **PKCE** `code_challenge` + `redirect_uri`) → BFF
+  brokers GitHub OAuth → redirect returns to the custom scheme **`ludo-desktop://auth/callback?code=…`**
+  → app exchanges `{code, code_verifier}` at `POST /auth/desktop/token` for a bearer token →
+  **Keychain**. (Loopback `127.0.0.1` is the CLI-style alternative; custom scheme chosen for the GUI app.)
+- Components: brand, **Sign in with GitHub**, endpoint hint.
+- States: idle · authenticating (browser open) · error (network/denied; user-cancel is silent).
+  On success → Discovery/last view.
 
 ### 6.2 Discovery — `02_discovery.png`
 - Purpose: show the read-only scan result and entry to scope.
@@ -174,7 +183,9 @@ Numbers map to prototype files. Each screen lists purpose · key components · s
 
 ## 11. Security
 
-- GitHub OAuth only; bearer token in **Keychain** (no password ever stored).
+- **Browser-redirect GitHub OAuth + PKCE** (`ASWebAuthenticationSession`, custom scheme
+  `ludo-desktop://auth/callback`) — no in-app password form; bearer token in **Keychain**.
+  The `code_verifier` never leaves the device; only the `code_challenge` goes to the BFF.
 - Source-Odoo credentials entered in the app are sent to the BFF over **TLS** for
   vault encryption server-side; **never** written to disk locally.
 - App Sandbox (network client), hardened runtime, notarized. ATS enforced (no plaintext HTTP).
