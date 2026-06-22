@@ -26,8 +26,18 @@ final class Autopilot {
         await pause(1.2)                       // 1) Sign-in screen visible
 
         auth.mode = .mock
-        auth.signIn()                          // CTA: "Sign in with GitHub" (mock) → Discovery
-        await pause()                          // 2) Discovery
+        auth.signIn()                          // CTA: "Sign in with GitHub" (mock)
+        await pause(1.6)                       // let bootstrap route by role
+
+        // Agency demo: show Fleet, then drill into a live monitor.
+        if app.role == "superdev" {
+            await pause(1.8)                   // 2a) Fleet console
+            if let m = app.migrations.first(where: { $0.stateIndex > 0 }) ?? app.migrations.first {
+                app.openMonitor(client: api, migration: m)
+            }
+            await pause(10)                    // 3a) live monitor
+            return
+        }
 
         app.step = .scope                      // CTA: "Configure migration scope →"
         app.inspectedModelID = "sale.order"
@@ -45,7 +55,8 @@ final class Autopilot {
         app.step = .review                     // CTA: "Review →"
         await pause()                          // 5) Review & launch
 
-        app.startMonitor(api: api)             // CTA: "Start migration ▸"
+        app.selectedMigrationID = "m_acme"     // CTA: "Start migration ▸"
+        app.startMonitor(client: api, migrationID: "m_acme")
         app.step = .monitor
         await pause(12)                        // 6/7) Monitor animating → complete
     }

@@ -2,18 +2,26 @@ import SwiftUI
 
 struct SignInView: View {
     @Environment(AuthService.self) private var auth
+    @Environment(ConnectionStore.self) private var conn
+    @State private var showSettings = false
 
     var body: some View {
-        @Bindable var auth = auth
         VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Button { showSettings = true } label: {
+                    Label("Connection", systemImage: "gearshape")
+                }
+                .buttonStyle(.borderless)
+                .padding(16)
+            }
             Spacer()
             VStack(spacing: 4) {
                 (Text("LU").foregroundStyle(Theme.textPrimary)
                  + Text("DO").foregroundStyle(Theme.accent))
                     .font(.system(size: 44, weight: .heavy))
                 Text("Odoo Migration · for Mac")
-                    .font(.system(size: 14))
-                    .foregroundStyle(Theme.textSecondary)
+                    .font(.system(size: 14)).foregroundStyle(Theme.textSecondary)
                     .padding(.bottom, 36)
 
                 Button(action: auth.signIn) {
@@ -31,30 +39,31 @@ struct SignInView: View {
 
                 Text("Authentication via GitHub OAuth.\nNo password is stored on this device.")
                     .multilineTextAlignment(.center)
-                    .font(.system(size: 12))
-                    .foregroundStyle(Theme.textTertiary)
+                    .font(.system(size: 12)).foregroundStyle(Theme.textTertiary)
                     .padding(.top, 16)
 
                 if let err = auth.lastError {
                     Text(err).font(.caption).foregroundStyle(Theme.badPillText).padding(.top, 6)
                 }
 
-                // Dummy-only: switch the login fidelity.
-                Picker("Login mode", selection: $auth.mode) {
-                    Text("Mock (instant)").tag(AuthService.Mode.mock)
-                    Text("Live (browser redirect)").tag(AuthService.Mode.live)
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
-                .frame(width: 320)
-                .padding(.top, 28)
+                Text(connectionSummary)
+                    .font(.system(size: 11)).foregroundStyle(Theme.textTertiary)
+                    .padding(.top, 24)
             }
             Spacer()
-            Text("v0.2 · connects to ludo.euroblaze.de")
+            Text("v0.2 · LUDO Desktop")
                 .font(.system(size: 11)).foregroundStyle(Theme.textTertiary)
                 .padding(.bottom, 18)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.white)
+        .sheet(isPresented: $showSettings) { SettingsView() }
+    }
+
+    private var connectionSummary: String {
+        switch conn.mode {
+        case .mock: return "Backend: Mock · sign in as \(conn.demoRole == "superdev" ? "Agency" : "Customer") — change in Connection"
+        case .live: return "Backend: Live · \(conn.baseURL)"
+        }
     }
 }

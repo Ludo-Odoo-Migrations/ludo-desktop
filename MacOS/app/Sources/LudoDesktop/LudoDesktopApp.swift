@@ -8,21 +8,22 @@ struct LudoDesktopApp: App {
     // on the Sign-in screen to exercise the real browser redirect.
     @State private var auth = AuthService(mode: .mock)
     @State private var app = AppState()
-    private let api: APIClient = MockAPIClient()
+    @State private var conn = ConnectionStore()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(auth)
                 .environment(app)
-                .environment(\.apiClient, api)
+                .environment(conn)
+                .environment(\.apiClient, conn.client)
                 .frame(minWidth: 980, minHeight: 660)
                 // Browser-redirect callback: ludo-desktop://auth/callback?code=...
                 .onOpenURL { url in auth.handleCallback(url) }
                 // Demo-only: walks every CTA when LUDO_AUTOPILOT=1 (inert otherwise).
                 .task {
                     if Autopilot.isEnabled {
-                        await Autopilot(auth: auth, app: app, api: api).run()
+                        await Autopilot(auth: auth, app: app, api: conn.client).run()
                     }
                 }
         }

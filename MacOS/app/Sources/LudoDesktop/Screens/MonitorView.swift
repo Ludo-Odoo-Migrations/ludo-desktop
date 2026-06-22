@@ -1,25 +1,31 @@
 import SwiftUI
 
+/// Live mission-control — driven by the Contract B event stream (mock or live).
 struct MonitorView: View {
     @Environment(AppState.self) private var app
+    @Environment(\.apiClient) private var api
 
     var body: some View {
         HSplitView {
-            leftPane.frame(minWidth: 540)
+            leftPane.frame(minWidth: 556)
             rightPane.frame(minWidth: 320)
         }
-        .navigationTitle("\(MockData.customerName) — \(app.monitorComplete ? "Migration complete" : "Migration in progress")")
+        .navigationTitle("Migration — \(app.monitorComplete ? (app.outcome.map { "complete · \($0)" } ?? "complete") : "in progress")")
         .toolbar {
             ToolbarItemGroup {
-                Button("Pause") {}.disabled(app.monitorComplete)
-                Button("Cancel") { app.stopMonitor(); app.step = .review }
-                    .tint(Theme.badPillText)
+                Button("← Back") { app.stopMonitor(); app.step = app.monitorReturnStep }
+                Button("Resume") {
+                    if let id = app.selectedMigrationID {
+                        Task { _ = try? await api.resume(id: id); app.openMonitor(client: api, migration: (try? await api.getMigration(id: id)) ?? Migration(id: id)) }
+                    }
+                }
+                .disabled(app.outcome != "aborted")
+                Button("Pause") {}.disabled(true).help("Needs BFF /pause endpoint (tracked)")
+                Button("Cancel") {}.disabled(true).help("Needs BFF /cancel endpoint (tracked)")
             }
         }
         .onDisappear { app.stopMonitor() }
     }
-
-    // MARK: Left — progress + per-model list
 
     private var leftPane: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -27,11 +33,12 @@ struct MonitorView: View {
                 ProgressRing(fraction: app.overallFraction)
                 VStack(alignment: .leading, spacing: 3) {
                     Text(app.monitorComplete
-                         ? "Done · \(app.completedModelCount) of \(app.progress.count) models"
-                         : "Migrating · \(app.completedModelCount) of \(app.progress.count) models")
+                         ? "Done · \(app.completedModelCount) of \(app.expectedTotal > 0 ? app.expectedTotal : app.progress.count) models"
+                         : "Migrating · \(app.completedModelCount) of \(app.expectedTotal > 0 ? app.expectedTotal : app.progress.count) models")
                         .font(.system(size: 18, weight: .bold))
-                    Text("Session s_9f3a21 · started 11:42")
-                        .font(.system(size: 13)).foregroundStyle(Theme.textSecondary)
+                    if let id = app.selectedMigrationID {
+                        Text("Migration \(id)").font(.system(size: 13)).foregroundStyle(Theme.textSecondary)
+                    }
                     if let running = app.progress.first(where: { $0.status == .running }) {
                         (Text("Now: ").foregroundStyle(Theme.textSecondary)
                          + Text(running.name).font(.monoSmall).foregroundStyle(Theme.depText))
@@ -44,10 +51,10 @@ struct MonitorView: View {
             Divider()
 
             HStack(spacing: 26) {
-                kpi("1.54M", "records loaded")
-                kpi("0", "drift / rollbacks")
-                kpi("3", "Cortex wake-ups")
-                kpi("€1,180", "cost so far")
+                kpi("\(app.completedModelCount)/\(app.expectedTotal > 0 ? app.expectedTotal : app.progress.count)", "models")
+                kpi("\(app.turnCount)", "Cortex turns")
+                kpi("\(app.driftCount)", "drift / safety")
+                kpi(String(format: "$%.1f", app.costUsd), "cost so far")
             }
             .padding(.horizontal, 26).padding(.vertical, 14)
             Divider()
@@ -58,16 +65,21 @@ struct MonitorView: View {
             List(app.progress) { row in
                 HStack(spacing: 12) {
                     statusIcon(row.status)
-                    Text(row.name).font(.monoSmall).frame(width: 180, alignment: .leading)
+                    Text(row.name).font(.monoSmall).frame(width: 200, alignment: .leading)
                         .foregroundStyle(row.status == .queued ? Theme.textTertiary : Theme.textPrimary)
-                    ProgressView(value: Double(row.done), total: Double(max(row.total, 1)))
+                    ProgressView(value: Double(row.done), total: 1)
                         .tint(row.status == .running ? Theme.running : Theme.success)
-                    Text(label(for: row)).font(.system(size: 12))
-                        .foregroundStyle(Theme.textSecondary).frame(width: 110, alignment: .trailing)
+                    Text(statusLabel(row.status)).font(.system(size: 12))
+                        .foregroundStyle(Theme.textSecondary).frame(width: 90, alignment: .trailing)
                 }
                 .listRowSeparator(.hidden)
             }
             .listStyle(.plain)
+            .overlay {
+                if app.progress.isEmpty {
+                    Text("Waiting for events…").foregroundStyle(Theme.textTertiary)
+                }
+            }
         }
     }
 
@@ -87,16 +99,14 @@ struct MonitorView: View {
         }
     }
 
-    private func label(for row: ModelProgress) -> String {
-        switch row.status {
-        case .done:    return "\(row.total.grouped) done"
-        case .running: return "\(row.done.compact) / \(row.total.compact)"
-        case .queued:  return "queued"
-        case .failed:  return "failed"
+    private func statusLabel(_ s: JobStatus) -> String {
+        switch s {
+        case .done: return "done"
+        case .running: return "running"
+        case .queued: return "queued"
+        case .failed: return "failed"
         }
     }
-
-    // MARK: Right — live log
 
     private var rightPane: some View {
         VStack(alignment: .leading, spacing: 0) {

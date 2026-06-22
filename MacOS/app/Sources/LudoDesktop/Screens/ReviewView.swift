@@ -64,7 +64,9 @@ struct ReviewView: View {
 
                 HStack(spacing: 14) {
                     Button {
-                        app.startMonitor(api: api)
+                        app.monitorReturnStep = .review
+                        app.selectedMigrationID = "m_acme"
+                        app.startMonitor(client: api, migrationID: "m_acme")
                         app.step = .monitor
                     } label: {
                         Text("Start migration ▸").fontWeight(.bold).padding(.horizontal, 8)
