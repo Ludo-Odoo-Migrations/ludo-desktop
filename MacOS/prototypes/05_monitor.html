@@ -1,0 +1,95 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"SF Pro Text","Helvetica Neue",sans-serif;background:#fff;padding:0;-webkit-font-smoothing:antialiased;color:#1d1d1f}
+.win{width:960px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12)}
+.tbar{height:52px;display:flex;align-items:center;gap:12px;padding:0 16px;background:linear-gradient(#fbfbfd,#eef0f3);border-bottom:1px solid #e2e2e6}
+.lights{display:flex;gap:8px}.lights i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+.ttl{font-weight:600;font-size:13px;color:#3a3a3c}.sp{flex:1}
+.btn{font-size:13px;padding:6px 13px;border:1px solid #d6d6da;border-radius:7px;background:#fff}
+.btn.danger{color:#c0392b;border-color:#eccccc}
+.body{display:flex;height:700px}
+.left{width:556px;border-right:1px solid #e6e6ea;display:flex;flex-direction:column}
+.hero{display:flex;align-items:center;gap:22px;padding:22px 26px;border-bottom:1px solid #eee}
+.ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(#34c759 0 64%,#e9e9ee 64% 100%);display:flex;align-items:center;justify-content:center;flex:none}
+.ring .in{width:74px;height:74px;border-radius:50%;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .pc{font-size:21px;font-weight:800}.ring .sm{font-size:10px;color:#86868b}
+.hmeta .st{font-size:18px;font-weight:700}
+.hmeta .ln{font-size:13px;color:#86868b;margin-top:3px}
+.hmeta .now{font-size:13px;margin-top:8px}.hmeta .now b{color:#0050d0}
+.kpis{display:flex;gap:26px;padding:14px 26px;border-bottom:1px solid #f0f0f2}
+.kpi .n{font-size:18px;font-weight:700}.kpi .l{font-size:11px;color:#86868b}
+.listh{font-size:11px;color:#9a9aa0;font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:10px 26px}
+.rows{flex:1;overflow:hidden}
+.tr{display:flex;align-items:center;gap:12px;padding:9px 26px;font-size:13px;border-bottom:1px solid #f6f6f8}
+.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:12.5px}
+.s{width:18px;text-align:center;font-weight:700}
+.s.done{color:#34c759}.s.run{color:#007aff}.s.q{color:#c4c4c8}.s.fail{color:#ff3b30}
+.bar{flex:1;height:6px;border-radius:3px;background:#eee;overflow:hidden;margin:0 6px}
+.bar i{display:block;height:100%;background:#34c759}
+.bar i.run{background:#007aff}
+.cnt{width:120px;text-align:right;color:#86868b;font-size:12px}
+.right{flex:1;display:flex;flex-direction:column}
+.rh{font-size:12.5px;font-weight:700;padding:14px 18px;border-bottom:1px solid #eee}
+.log{flex:1;padding:12px 18px;font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.85;color:#3a3a3c;overflow:hidden}
+.log .t{color:#a8a8ae}
+.log .ev{color:#0050d0}.log .ok{color:#1c8a3a}.log .w{color:#c0392b}
+.foot{height:48px;border-top:1px solid #e6e6ea;background:#fafafc;display:flex;align-items:center;gap:16px;padding:0 18px}
+.foot .stat{font-size:12.5px;color:#3a3a3c}.foot .stat b{font-weight:700}.dot{color:#cfcfd4}
+</style></head><body>
+<div class="win">
+  <div class="tbar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <div class="ttl">Acme GmbH — Migration in progress</div><div class="sp"></div>
+    <button class="btn">Pause</button><button class="btn danger">Cancel</button></div>
+  <div class="body">
+    <div class="left">
+      <div class="hero">
+        <div class="ring"><div class="in"><div class="pc">64%</div><div class="sm">complete</div></div></div>
+        <div class="hmeta">
+          <div class="st">Migrating · 88 of 138 models</div>
+          <div class="ln">Session s_9f3a21 · started 11:42 · ~1h 50m remaining</div>
+          <div class="now">Now: <b>account.move.line</b> — loading batch 142 / 410</div>
+        </div>
+      </div>
+      <div class="kpis">
+        <div class="kpi"><div class="n">1.54M</div><div class="l">records loaded</div></div>
+        <div class="kpi"><div class="n">0</div><div class="l">drift / rollbacks</div></div>
+        <div class="kpi"><div class="n">3</div><div class="l">Cortex wake-ups</div></div>
+        <div class="kpi"><div class="n">€1,180</div><div class="l">cost so far</div></div>
+      </div>
+      <div class="listh">Models</div>
+      <div class="rows">
+        <div class="tr"><span class="s done">✓</span><span class="mono" style="width:200px">res.partner</span><span class="bar"><i style="width:100%"></i></span><span class="cnt">62,140 done</span></div>
+        <div class="tr"><span class="s done">✓</span><span class="mono" style="width:200px">product.template</span><span class="bar"><i style="width:100%"></i></span><span class="cnt">6,120 done</span></div>
+        <div class="tr"><span class="s done">✓</span><span class="mono" style="width:200px">sale.order</span><span class="bar"><i style="width:100%"></i></span><span class="cnt">38,402 done</span></div>
+        <div class="tr"><span class="s done">✓</span><span class="mono" style="width:200px">sale.order.line</span><span class="bar"><i style="width:100%"></i></span><span class="cnt">412,118 done</span></div>
+        <div class="tr"><span class="s run">⟳</span><span class="mono" style="width:200px"><b>account.move.line</b></span><span class="bar"><i class="run" style="width:35%"></i></span><span class="cnt">142K / 410K</span></div>
+        <div class="tr"><span class="s q">○</span><span class="mono" style="width:200px;color:#9a9aa0">account.payment</span><span class="bar"><i style="width:0"></i></span><span class="cnt">queued</span></div>
+        <div class="tr"><span class="s q">○</span><span class="mono" style="width:200px;color:#9a9aa0">stock.move</span><span class="bar"><i style="width:0"></i></span><span class="cnt">queued</span></div>
+        <div class="tr"><span class="s q">○</span><span class="mono" style="width:200px;color:#9a9aa0">stock.quant</span><span class="bar"><i style="width:0"></i></span><span class="cnt">queued</span></div>
+      </div>
+    </div>
+    <div class="right">
+      <div class="rh">Live activity</div>
+      <div class="log">
+        <div><span class="t">11:42:03</span> <span class="ev">session_started</span> s_9f3a21</div>
+        <div><span class="t">11:42:09</span> blueprint_generated · 138 models</div>
+        <div><span class="t">11:43:50</span> <span class="ok">model_completed</span> res.partner ✓</div>
+        <div><span class="t">11:51:12</span> <span class="ok">model_completed</span> sale.order ✓</div>
+        <div><span class="t">12:18:44</span> <span class="ev">job_started</span> load account.move.line</div>
+        <div><span class="t">12:31:02</span> <span class="ev">turn_started</span> Cortex — unmapped field</div>
+        <div><span class="t">12:31:48</span> <span class="ok">turn_completed</span> applied rename → ref</div>
+        <div><span class="t">12:33:10</span> per-batch verify ✓ (140 / 410)</div>
+        <div><span class="t">12:33:30</span> <span class="w">safety_event</span> none · 0 drift</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="stat">Outcome target: <b>migrate</b></span><span class="dot">·</span>
+    <span class="stat"><b>0</b> data-loss events</span><span class="dot">·</span>
+    <span class="stat">checkpoint <b>load_complete</b> pending</span>
+    <div class="sp" style="flex:1"></div>
+    <span class="stat" style="color:#86868b">Streaming Contract-B events · auto-resumes if connection drops</span>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,125 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"SF Pro Text","Helvetica Neue",sans-serif;background:#fff;padding:0;-webkit-font-smoothing:antialiased;color:#1d1d1f}
+.win{width:980px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12)}
+.tbar{height:52px;display:flex;align-items:center;gap:12px;padding:0 16px;background:linear-gradient(#fbfbfd,#eef0f3);border-bottom:1px solid #e2e2e6}
+.lights{display:flex;gap:8px}.lights i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+.ttl{font-weight:600;font-size:13px;color:#3a3a3c}.sp{flex:1}
+.search{width:230px;height:28px;border:1px solid #d8d8dc;border-radius:7px;background:#fff;font-size:12.5px;color:#9a9aa0;display:flex;align-items:center;padding:0 10px;gap:6px}
+.btn{font-size:13px;padding:6px 13px;border:1px solid #d6d6da;border-radius:7px;background:#fff}
+.btn.pri{background:#007aff;color:#fff;border-color:#007aff;font-weight:600}
+.body{display:flex;height:672px}
+.col1{width:212px;background:#f5f5f7;border-right:1px solid #e6e6ea;padding:12px 9px;overflow:hidden}
+.sgrp{font-size:11px;color:#9a9aa0;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:8px 9px 5px}
+.cat{display:flex;align-items:center;gap:9px;font-size:13.5px;padding:7px 9px;border-radius:7px}
+.cat.on{background:#007aff;color:#fff;font-weight:600}
+.cat .ic{width:16px;text-align:center}
+.cat .ct{margin-left:auto;font-size:11.5px;color:#9a9aa0}
+.cat.on .ct{color:#dbe9ff}
+.col2{flex:1;min-width:0;border-right:1px solid #e6e6ea;display:flex;flex-direction:column;overflow:hidden}
+.c2h{display:flex;align-items:center;gap:11px;padding:13px 18px;border-bottom:1px solid #eee}
+.c2h .nm{font-size:15px;font-weight:700}
+.c2h .meta{font-size:12px;color:#86868b}
+.tableh{display:flex;font-size:11px;color:#9a9aa0;font-weight:600;text-transform:uppercase;letter-spacing:.3px;padding:8px 18px;border-bottom:1px solid #f0f0f2}
+.tableh .a{flex:1}.tableh .b{width:96px;text-align:right}.tableh .c{width:74px;text-align:right}
+.rows{flex:1;overflow:hidden}
+.tr{display:flex;align-items:center;padding:9px 18px;font-size:13px;border-bottom:1px solid #f5f5f7}
+.tr.sel{background:#eef4ff}
+.tr .a{flex:1;display:flex;align-items:center;gap:11px}
+.tr .b{width:96px;text-align:right;color:#3a3a3c}
+.tr .c{width:74px;text-align:right;color:#9a9aa0}
+.mono{font-family:"SF Mono",ui-monospace,Menlo,monospace;font-size:12.5px}
+.tech{color:#86868b;font-size:11.5px}
+.ck{width:16px;height:16px;border-radius:4px;border:1.6px solid #c4c4c8;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:11px;flex:none;background:#fff}
+.ck.on{background:#007aff;border-color:#007aff}
+.ck.mix{background:#007aff;border-color:#007aff}
+.col3{width:312px;flex:none;display:flex;flex-direction:column;overflow:hidden}
+.c3h{padding:13px 16px;border-bottom:1px solid #eee}
+.c3h .k{font-size:11px;color:#9a9aa0;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.c3h .nm{font-size:15px;font-weight:700;margin-top:2px}
+.sec{padding:12px 16px;border-bottom:1px solid #f1f1f3}
+.sec .t{font-size:12px;font-weight:700;color:#3a3a3c;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.frow{display:flex;align-items:center;gap:10px;padding:5px 0;font-size:12.5px}
+.frow .ty{margin-left:auto;font-size:10.5px;color:#fff;background:#a0a0a8;border-radius:4px;padding:1px 6px;font-weight:600}
+.frow .ty.std{background:#cdd2da}.frow .ty.cust{background:#34a853}
+.dep{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:4px 0;color:#3a3a3c}
+.dep .mono{color:#0050d0}
+.depbox{background:#eef4ff;border:1px solid #d4e2ff;border-radius:9px;padding:11px 12px}
+.warnbox{background:#fff7ef;border:1px solid #fbe2c7;border-radius:9px;padding:11px 12px;font-size:12px;color:#9a5511;line-height:1.5}
+.foot{height:48px;border-top:1px solid #e6e6ea;background:#fafafc;display:flex;align-items:center;gap:18px;padding:0 18px}
+.foot .stat{font-size:12.5px;color:#3a3a3c}.foot .stat b{font-weight:700}
+.foot .dot{color:#cfcfd4}
+.note{font-size:11px;color:#9a9aa0}
+</style></head><body>
+<div class="win">
+  <div class="tbar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <div class="ttl">Acme GmbH — Choose what to migrate</div><div class="sp"></div>
+    <div class="search">⌕ Filter models…</div>
+    <button class="btn">Reset to all</button><button class="btn pri">Review →</button></div>
+  <div class="body">
+    <!-- COL 1: categories / modules -->
+    <div class="col1">
+      <div class="sgrp">Modules by category</div>
+      <div class="cat"><span class="ck mix">–</span><span class="ic">▦</span>All<span class="ct">158</span></div>
+      <div class="cat on"><span class="ck on">✓</span><span class="ic">＄</span>Sales<span class="ct">14</span></div>
+      <div class="cat"><span class="ck on">✓</span><span class="ic">€</span>Accounting<span class="ct">31</span></div>
+      <div class="cat"><span class="ck on">✓</span><span class="ic">▤</span>Inventory<span class="ct">22</span></div>
+      <div class="cat"><span class="ck on">✓</span><span class="ic">☎</span>CRM<span class="ct">9</span></div>
+      <div class="cat"><span class="ck mix">–</span><span class="ic">☺</span>HR<span class="ct">18</span></div>
+      <div class="cat"><span class="ck on">✓</span><span class="ic">⚑</span>Localization (DE)<span class="ct">7</span></div>
+      <div class="cat"><span class="ck">&nbsp;</span><span class="ic">✎</span>Website / CMS<span class="ct">12</span></div>
+      <div class="cat"><span class="ck mix">–</span><span class="ic">★</span>Custom / Studio<span class="ct">6</span></div>
+      <div class="cat"><span class="ck">&nbsp;</span><span class="ic">⚙</span>System<span class="ct">39</span></div>
+    </div>
+    <!-- COL 2: models in selected module -->
+    <div class="col2">
+      <div class="c2h"><span class="ck on">✓</span><span class="nm">Sales</span><span class="meta">· module <span class="mono">sale</span> · 14 models · 480K records</span></div>
+      <div class="tableh"><span class="a">Model</span><span class="b">Records</span><span class="c">Fields</span></div>
+      <div class="rows">
+        <div class="tr sel"><span class="a"><span class="ck on">✓</span><span><span class="mono">sale.order</span> <span class="tech">Sales Order</span></span></span><span class="b">38,402</span><span class="c">96</span></div>
+        <div class="tr"><span class="a"><span class="ck on">✓</span><span><span class="mono">sale.order.line</span> <span class="tech">Order Line</span></span></span><span class="b">412,118</span><span class="c">71</span></div>
+        <div class="tr"><span class="a"><span class="ck on">✓</span><span><span class="mono">sale.order.template</span> <span class="tech">Quotation Template</span></span></span><span class="b">142</span><span class="c">22</span></div>
+        <div class="tr"><span class="a"><span class="ck on">✓</span><span><span class="mono">sale.report</span> <span class="tech">Sales Analysis</span></span></span><span class="b">—</span><span class="c">34</span></div>
+        <div class="tr"><span class="a"><span class="ck">&nbsp;</span><span><span class="mono">crm.team</span> <span class="tech">Sales Team</span></span></span><span class="b">12</span><span class="c">28</span></div>
+        <div class="tr"><span class="a"><span class="ck on">✓</span><span><span class="mono">product.product</span> <span class="tech">Product Variant</span></span></span><span class="b">8,940</span><span class="c">88</span></div>
+        <div class="tr"><span class="a"><span class="ck on">✓</span><span><span class="mono">product.template</span> <span class="tech">Product</span></span></span><span class="b">6,120</span><span class="c">102</span></div>
+        <div class="tr"><span class="a"><span class="ck on">✓</span><span><span class="mono">product.pricelist</span> <span class="tech">Pricelist</span></span></span><span class="b">38</span><span class="c">19</span></div>
+      </div>
+    </div>
+    <!-- COL 3: inspector -->
+    <div class="col3">
+      <div class="c3h"><div class="k">Inspecting model</div><div class="nm mono" style="font-size:15px">sale.order</div></div>
+      <div class="sec">
+        <div class="t">⚑ Custom / Studio fields <span style="color:#9a9aa0;font-weight:500">· 4 found</span></div>
+        <div class="frow"><span class="ck on">✓</span><span class="mono">x_delivery_route</span><span class="ty cust">custom</span></div>
+        <div class="frow"><span class="ck on">✓</span><span class="mono">x_priority_flag</span><span class="ty cust">custom</span></div>
+        <div class="frow"><span class="ck">&nbsp;</span><span class="mono tech">x_legacy_ref</span><span class="ty cust">custom</span></div>
+        <div class="frow"><span class="ck on">✓</span><span class="mono">x_studio_margin</span><span class="ty cust">custom</span></div>
+        <div class="note" style="margin-top:7px">Standard fields always migrate. Untick only custom fields you want to drop.</div>
+      </div>
+      <div class="sec">
+        <div class="t">↘ Also required (auto-included)</div>
+        <div class="depbox">
+          <div class="dep">＋ <span class="mono">res.partner</span> <span class="note">— referenced by partner_id</span></div>
+          <div class="dep">＋ <span class="mono">res.currency</span> <span class="note">— pricing</span></div>
+          <div class="dep">＋ <span class="mono">res.company</span> <span class="note">— ownership</span></div>
+          <div class="note" style="margin-top:6px">9 dependencies pulled in across your selection.</div>
+        </div>
+      </div>
+      <div class="sec" style="border-bottom:none">
+        <div class="t">⚠ Port-blocker in scope</div>
+        <div class="warnbox"><b>x_acme_logistics</b> (custom module) owns <span class="mono">sale.order.x_delivery_route</span>. It must be ported to v18 before this field migrates — flagged for the engineer.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot">
+    <span class="stat"><b>138</b> of 158 models</span><span class="dot">·</span>
+    <span class="stat"><b>+9</b> dependencies auto-included</span><span class="dot">·</span>
+    <span class="stat"><b>~2.41M</b> records</span><span class="dot">·</span>
+    <span class="stat">est. <b>€1,840</b></span>
+    <div class="sp" style="flex:1"></div>
+    <span class="note">Default is everything — your changes exclude 20 models</span>
+  </div>
+</div>
+</body></html>

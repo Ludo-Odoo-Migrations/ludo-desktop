@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"SF Pro Text","Helvetica Neue",sans-serif;background:#fff;padding:0;-webkit-font-smoothing:antialiased;color:#1d1d1f}
+.win{width:960px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12)}
+.tbar{height:52px;display:flex;align-items:center;gap:14px;padding:0 16px;background:linear-gradient(#fbfbfd,#eef0f3);border-bottom:1px solid #e2e2e6}
+.lights{display:flex;gap:8px}.lights i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+.ttl{font-weight:600;font-size:13px;color:#3a3a3c}.sp{flex:1}
+.btn{font-size:13px;color:#1d1d1f;padding:6px 13px;border:1px solid #d6d6da;border-radius:7px;background:#fff}
+.btn.pri{background:#007aff;color:#fff;border-color:#007aff;font-weight:600}
+.body{display:flex;height:720px}
+.side{width:212px;background:#f5f5f7;border-right:1px solid #e6e6ea;padding:14px 10px}
+.sgrp{font-size:11px;color:#9a9aa0;font-weight:600;text-transform:uppercase;letter-spacing:.4px;padding:8px 10px 4px}
+.sitem{display:flex;align-items:center;gap:9px;font-size:13.5px;padding:7px 10px;border-radius:7px;color:#1d1d1f}
+.sitem.on{background:#007aff;color:#fff;font-weight:600}
+.sitem .ic{width:17px;text-align:center}
+.main{flex:1;padding:26px 30px;overflow:hidden}
+.h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.sub{font-size:13.5px;color:#86868b;margin-top:3px}
+.pair{display:inline-flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;background:#eef3ff;color:#0050d0;border:1px solid #d4e2ff;padding:5px 12px;border-radius:20px;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+.c{background:#fafafc;border:1px solid #ececef;border-radius:11px;padding:16px 16px 14px}
+.c .n{font-size:27px;font-weight:700;letter-spacing:-.5px}
+.c .l{font-size:12px;color:#86868b;margin-top:2px}
+.c.warn .n{color:#d1620a}.c.warn{background:#fff7ef;border-color:#fbe2c7}
+.row2{display:grid;grid-template-columns:1.4fr 1fr;gap:18px;margin-top:24px}
+.panel{border:1px solid #ececef;border-radius:11px;overflow:hidden}
+.ph{font-size:12.5px;font-weight:600;color:#3a3a3c;padding:11px 14px;background:#fafafc;border-bottom:1px solid #ececef}
+.li{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;font-size:13px;border-bottom:1px solid #f2f2f4}
+.li:last-child{border-bottom:none}
+.muted{color:#86868b}
+.pill{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;background:#eaf6ec;color:#1c8a3a}
+.pill.b{background:#fdecec;color:#c0392b}
+.cta{display:flex;justify-content:flex-end;margin-top:24px}
+</style></head><body>
+<div class="win">
+  <div class="tbar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <div class="ttl">Acme GmbH — Discovery</div><div class="sp"></div>
+    <button class="btn">Re-scan</button><button class="btn pri">Configure scope →</button></div>
+  <div class="body">
+    <div class="side">
+      <div class="sgrp">Workspace</div>
+      <div class="sitem"><span class="ic">◷</span>Estimates</div>
+      <div class="sitem on"><span class="ic">⌖</span>Discovery</div>
+      <div class="sitem"><span class="ic">▤</span>Migrations</div>
+      <div class="sitem"><span class="ic">↡</span>Activity</div>
+      <div class="sgrp" style="margin-top:10px">Connection</div>
+      <div class="sitem"><span class="ic">⛁</span>Odoo source</div>
+      <div class="sitem"><span class="ic">⚙</span>Account</div>
+    </div>
+    <div class="main">
+      <div class="h1">Discovery complete</div>
+      <div class="sub">We scanned your source system read-only. Nothing was changed.</div>
+      <div class="pair">Odoo 15.0 Enterprise → 18.0 Enterprise</div>
+      <div class="cards">
+        <div class="c"><div class="n">158</div><div class="l">Installed modules</div></div>
+        <div class="c"><div class="n">312</div><div class="l">Data models</div></div>
+        <div class="c"><div class="n">2.61M</div><div class="l">Records</div></div>
+        <div class="c warn"><div class="n">6</div><div class="l">Port-blocker modules</div></div>
+      </div>
+      <div class="row2">
+        <div class="panel">
+          <div class="ph">Largest modules by data</div>
+          <div class="li"><span>Accounting <span class="muted">· account.*</span></span><span class="muted">just under 1.2M records</span></div>
+          <div class="li"><span>Sales <span class="muted">· sale.*</span></span><span class="muted">480K records</span></div>
+          <div class="li"><span>Inventory <span class="muted">· stock.*</span></span><span class="muted">410K records</span></div>
+          <div class="li"><span>Contacts <span class="muted">· res.partner</span></span><span class="muted">62K records</span></div>
+          <div class="li"><span>CRM <span class="muted">· crm.*</span></span><span class="muted">38K records</span></div>
+        </div>
+        <div class="panel">
+          <div class="ph">Migration readiness</div>
+          <div class="li"><span>Standard modules</span><span class="pill">152 ready</span></div>
+          <div class="li"><span>Custom / Studio modules</span><span class="pill b">6 need port</span></div>
+          <div class="li"><span>Custom fields detected</span><span class="muted">214</span></div>
+          <div class="li"><span>Estimated effort</span><span class="muted">€1,650 – €2,100</span></div>
+        </div>
+      </div>
+      <div class="cta"><button class="btn pri" style="padding:9px 18px;font-size:14px">Configure migration scope →</button></div>
+    </div>
+  </div>
+</div>
+</body></html>

@@ -1,0 +1,24 @@
+# macOS
+.DS_Store
+
+# Xcode / Swift (macOS app)
+build/
+DerivedData/
+*.xcuserstate
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+.swiftpm/
+Pods/
+
+# .NET / WinUI (Windows app)
+bin/
+obj/
+.vs/
+*.user
+
+# Node (tooling, if any)
+node_modules/
+
+# Local env / secrets
+.env
+*.local

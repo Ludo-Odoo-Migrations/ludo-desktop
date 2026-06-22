@@ -1,0 +1,66 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+*{box-sizing:border-box}
+body{margin:0;font-family:-apple-system,"SF Pro Text","Helvetica Neue",sans-serif;background:#fff;padding:0;-webkit-font-smoothing:antialiased;color:#1d1d1f}
+.win{width:900px;margin:0 auto;background:#fff;border-radius:12px;overflow:hidden;border:1px solid rgba(0,0,0,.12)}
+.tbar{height:52px;display:flex;align-items:center;gap:12px;padding:0 16px;background:linear-gradient(#fbfbfd,#eef0f3);border-bottom:1px solid #e2e2e6}
+.lights{display:flex;gap:8px}.lights i{width:12px;height:12px;border-radius:50%;display:inline-block}
+.r{background:#ff5f57}.y{background:#febc2e}.g{background:#28c840}
+.ttl{font-weight:600;font-size:13px;color:#3a3a3c}.sp{flex:1}
+.btn{font-size:13px;padding:6px 13px;border:1px solid #d6d6da;border-radius:7px;background:#fff}
+.main{padding:30px 36px}
+.h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
+.sub{font-size:13.5px;color:#86868b;margin-top:3px}
+.grid{display:grid;grid-template-columns:1.2fr 1fr;gap:18px;margin-top:24px}
+.card{border:1px solid #ececef;border-radius:12px;overflow:hidden}
+.ch{font-size:12.5px;font-weight:700;color:#3a3a3c;padding:12px 16px;background:#fafafc;border-bottom:1px solid #ececef}
+.li{display:flex;align-items:center;justify-content:space-between;padding:11px 16px;font-size:13.5px;border-bottom:1px solid #f3f3f5}
+.li:last-child{border-bottom:none}
+.muted{color:#86868b}.b{font-weight:700}
+.big{font-size:34px;font-weight:800;letter-spacing:-1px;padding:18px 16px 4px}
+.biglbl{font-size:12px;color:#86868b;padding:0 16px 16px}
+.seg{display:inline-flex;border:1px solid #d6d6da;border-radius:9px;overflow:hidden;margin-top:6px}
+.seg div{font-size:13px;padding:7px 16px;border-right:1px solid #e3e3e7;color:#3a3a3c}
+.seg div:last-child{border-right:none}
+.seg div.on{background:#007aff;color:#fff;font-weight:600}
+.modes{padding:14px 16px}
+.modes .lbl{font-size:12px;color:#86868b;margin-bottom:2px}
+.cta{display:flex;align-items:center;gap:14px;margin-top:26px}
+.start{background:#007aff;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;padding:13px 26px}
+.legal{font-size:12px;color:#9a9aa0;line-height:1.5}
+.chip{display:inline-block;font-size:11px;font-weight:600;background:#eaf6ec;color:#1c8a3a;border-radius:10px;padding:2px 9px;margin-left:8px}
+</style></head><body>
+<div class="win">
+  <div class="tbar"><div class="lights"><i class="r"></i><i class="y"></i><i class="g"></i></div>
+    <div class="ttl">Acme GmbH — Review &amp; launch</div><div class="sp"></div><button class="btn">← Back to scope</button></div>
+  <div class="main">
+    <div class="h1">Review your migration</div>
+    <div class="sub">Confirm the scope and mode. You can re-run an estimate without touching your data.</div>
+    <div class="grid">
+      <div class="card">
+        <div class="ch">Selected scope</div>
+        <div class="li"><span>Modules</span><span><span class="b">11</span> of 14 categories</span></div>
+        <div class="li"><span>Models</span><span><span class="b">138</span> selected <span class="chip">+9 deps</span></span></div>
+        <div class="li"><span>Excluded models</span><span class="muted">20 (System, Website)</span></div>
+        <div class="li"><span>Custom fields dropped</span><span class="muted">7 of 214</span></div>
+        <div class="li"><span>Records to migrate</span><span class="b">~2.41M</span></div>
+        <div class="li"><span>Port-blockers flagged</span><span class="muted">1 (x_acme_logistics)</span></div>
+      </div>
+      <div class="card">
+        <div class="ch">Estimate</div>
+        <div class="big">€1,840</div>
+        <div class="biglbl">approx. cost · billed on completion</div>
+        <div class="li"><span>Est. duration</span><span class="b">4 – 6 h</span></div>
+        <div class="li"><span>Version pair</span><span class="muted">15.0 → 18.0 EE</span></div>
+        <div class="modes">
+          <div class="lbl">Run mode</div>
+          <div class="seg"><div>Estimate</div><div class="on">Migrate</div><div>Dry-run</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="cta">
+      <button class="start">Start migration ▸</button>
+      <div class="legal">A copy of your selection is saved to this migration. The engine runs server-side; you can close the app and reopen to watch progress.</div>
+    </div>
+  </div>
+</div>
+</body></html>
