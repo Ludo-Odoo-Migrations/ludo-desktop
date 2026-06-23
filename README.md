@@ -1,7 +1,7 @@
 # ludo-desktop
 
-Native desktop clients for LUDO — one per OS. Each is a **thin client of the ludo-apps
-BFF** (Contract A, REST + SSE): sign in, review discovery, **choose modules/models/custom
+Native desktop clients for LUDO — one per OS. Each is a **thin client of the LUDO
+gateway** (Contract A, REST + SSE): sign in, review discovery, **choose modules/models/custom
 fields to migrate**, launch, and monitor live. No client touches MinIO, the agent, or the
 broker; only `account_id` crosses, never customer PII.
 
