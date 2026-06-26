@@ -1,6 +1,6 @@
 import Foundation
 
-/// Talks to the ludo-apps BFF (Contract A REST + Contract B NDJSON SSE).
+/// Talks to the gateway (Contract A REST + Contract B SSE event stream).
 /// Auth is a bearer token (dev-token paste for now; production browser-redirect
 /// login is tracked as a BFF dependency). Scope-selection still uses mock data.
 struct LiveAPIClient: APIClient {
@@ -43,24 +43,44 @@ struct LiveAPIClient: APIClient {
         return try await getMigration(id: id)
     }
 
-    // MARK: Contract B — NDJSON event stream (one JSON envelope per line)
+    // MARK: Contract B — SSE event stream (`id:`/`event:`/`data:` frames; resumable)
 
     func streamEvents(migrationId: String) -> AsyncStream<SessionEvent> {
         AsyncStream { continuation in
             let task = Task {
                 var backoff: UInt64 = 1_000_000_000   // 1s, doubles up to 8s
+                var lastEventID: Int? = nil           // JetStream seq -> resume on reconnect
                 while !Task.isCancelled {
                     do {
-                        let req = request("/migrations/\(migrationId)/events", method: "GET")
+                        let req = request("/migrations/\(migrationId)/events", method: "GET",
+                                          accept: "text/event-stream", lastEventID: lastEventID)
                         let (bytes, response) = try await URLSession.shared.bytes(for: req)
                         guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
                         backoff = 1_000_000_000
+
+                        // SSE framing: accumulate `data:` lines until the blank-line boundary,
+                        // then decode the joined body as one Contract B envelope. `id:` is the
+                        // resumable sequence; `event:` is ignored (the envelope carries `type`).
+                        var dataBuf: [String] = []
                         for try await line in bytes.lines {
                             if Task.isCancelled { break }
-                            guard let data = line.data(using: .utf8), !line.isEmpty else { continue }
-                            if let ev = try? Self.decoder.decode(SessionEvent.self, from: data) {
-                                continuation.yield(ev)
-                                if ev.type == "session_end" { continuation.finish(); return }
+                            if line.isEmpty {                       // frame boundary -> dispatch
+                                guard !dataBuf.isEmpty else { continue }
+                                let body = dataBuf.joined(separator: "\n")
+                                dataBuf.removeAll(keepingCapacity: true)
+                                if let data = body.data(using: .utf8),
+                                   let ev = try? Self.decoder.decode(SessionEvent.self, from: data) {
+                                    continuation.yield(ev)
+                                    if ev.type == "session_end" { continuation.finish(); return }
+                                }
+                                continue
+                            }
+                            if line.hasPrefix("id:") {
+                                lastEventID = Int(line.dropFirst(3).trimmingCharacters(in: .whitespaces)) ?? lastEventID
+                            } else if line.hasPrefix("data:") {
+                                var value = line.dropFirst(5)
+                                if value.first == " " { value = value.dropFirst() }
+                                dataBuf.append(String(value))
                             }
                         }
                     } catch {
@@ -83,11 +103,13 @@ struct LiveAPIClient: APIClient {
         return URL(string: base + path) ?? baseURL
     }
 
-    private func request(_ path: String, method: String) -> URLRequest {
+    private func request(_ path: String, method: String,
+                         accept: String = "application/json", lastEventID: Int? = nil) -> URLRequest {
         var req = URLRequest(url: url(path))
         req.httpMethod = method
         if !token.isEmpty { req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
-        req.setValue("application/json", forHTTPHeaderField: "Accept")
+        req.setValue(accept, forHTTPHeaderField: "Accept")
+        if let lastEventID { req.setValue(String(lastEventID), forHTTPHeaderField: "Last-Event-ID") }
         return req
     }
 
