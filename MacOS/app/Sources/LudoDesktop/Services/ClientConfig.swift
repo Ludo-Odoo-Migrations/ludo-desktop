@@ -2,7 +2,7 @@ import Foundation
 
 /// Resolves the LUDO gateway base URL for the desktop client.
 ///
-/// Order (per the cluster client-config convention — `ludo-init/docs/contracts-consumer-guide.md`):
+/// Order (per the cluster client-config convention — `agentix/docs/contracts-consumer-guide.md`):
 ///   env `LUDO_API_URL` → `UserDefaults["LUDO_API_URL"]` → the prod default from the canonical
 /// `constants/cluster.yaml` `domains` block. Never hardcode a deployment URL at a call site
 /// (CRIE 002 #5).
