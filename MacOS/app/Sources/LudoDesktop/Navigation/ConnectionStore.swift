@@ -7,7 +7,7 @@ final class ConnectionStore {
     enum Mode: String, CaseIterable, Identifiable, Hashable { case mock, live; var id: String { rawValue } }
 
     var mode: Mode = .mock
-    var baseURL: String = "http://10.0.99.1:8000"   // house rule: loopback alias, not localhost
+    var baseURL: String = "http://10.0.99.1:8080"   // gateway dev port; loopback alias, not localhost
     var devToken: String = ""
     /// Mock-only: pretend to be a single customer or an agency (many accounts → Fleet).
     var demoRole: String = "customer"

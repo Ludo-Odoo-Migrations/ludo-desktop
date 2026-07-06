@@ -39,3 +39,14 @@ targets:
           - CFBundleURLName: de.euroblaze.ludodesktop.auth
             CFBundleURLSchemes:
               - ludo-desktop
+  # Unit tests (backoff policy, …). macOS-only toolchain: runs in Xcode/CI,
+  # not in run_dev.sh's swiftc build (which globs Sources only). Desktop
+  # test-infra placement is tracked in euroblaze/ludo-tests#5.
+  LudoDesktopTests:
+    type: bundle.unit-test
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: Tests
+    dependencies:
+      - target: LudoDesktop
