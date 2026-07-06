@@ -48,15 +48,26 @@ struct LiveAPIClient: APIClient {
     func streamEvents(migrationId: String) -> AsyncStream<SessionEvent> {
         AsyncStream { continuation in
             let task = Task {
-                var backoff: UInt64 = 1_000_000_000   // 1s, doubles up to 8s
+                // Cluster reconnect policy (agentix#9 / ludo-cli omg client):
+                // exponential base 0.5s, cap 30s, full jitter, transient-status
+                // filter. The stream reconnects forever *by design* (a live
+                // event feed), but jittered so restarts don't herd the gateway.
+                var attempt = 0
                 var lastEventID: Int? = nil           // JetStream seq -> resume on reconnect
                 while !Task.isCancelled {
                     do {
                         let req = request("/migrations/\(migrationId)/events", method: "GET",
                                           accept: "text/event-stream", lastEventID: lastEventID)
                         let (bytes, response) = try await URLSession.shared.bytes(for: req)
-                        guard (response as? HTTPURLResponse)?.statusCode == 200 else { throw URLError(.badServerResponse) }
-                        backoff = 1_000_000_000
+                        let status = (response as? HTTPURLResponse)?.statusCode ?? 0
+                        if status != 200 {
+                            // Non-transient client errors (auth/gone) won't fix
+                            // themselves — stop rather than hammer. 429 + 5xx are
+                            // transient: fall through to jittered reconnect.
+                            if (400..<500).contains(status) && status != 429 { continuation.finish(); return }
+                            throw URLError(.badServerResponse)
+                        }
+                        attempt = 0
 
                         // SSE framing: accumulate `data:` lines until the blank-line boundary,
                         // then decode the joined body as one Contract B envelope. `id:` is the
@@ -85,8 +96,8 @@ struct LiveAPIClient: APIClient {
                         }
                     } catch {
                         if Task.isCancelled { break }
-                        try? await Task.sleep(nanoseconds: backoff)
-                        backoff = min(backoff * 2, 8_000_000_000)   // reconnect with backoff
+                        try? await Task.sleep(nanoseconds: Self.backoffDelay(attempt: attempt))
+                        attempt += 1
                     }
                 }
                 continuation.finish()
@@ -97,10 +108,34 @@ struct LiveAPIClient: APIClient {
 
     // MARK: Plumbing
 
-    /// Joins base + path (path always starts with "/"; preserves any query string).
+    /// The gateway mounts Contract A/B routers under `/api/v1`
+    /// (auth/system/health stay unprefixed). Centralised here so every call
+    /// site passes the bare resource path.
+    private static let apiPrefix = "/api/v1"
+
+    // Reconnect backoff (cluster client policy — agentix#9 / ludo-cli).
+    static let backoffBaseNs: UInt64 = 500_000_000     // 0.5s
+    static let backoffCapNs: UInt64 = 30_000_000_000   // 30s
+
+    /// Full-jittered exponential backoff for reconnect attempt `attempt`
+    /// (0-based). Delay is a random draw in `[base/2, min(base·2^attempt, cap)]`
+    /// — jitter breaks the thundering-herd after a gateway restart; the floor
+    /// avoids a busy-loop.
+    static func backoffDelay(attempt: Int) -> UInt64 {
+        let ceiling = min(backoffBaseNs << UInt64(min(attempt, 6)), backoffCapNs)
+        let floor = min(backoffBaseNs / 2, ceiling)
+        return UInt64.random(in: floor...ceiling)
+    }
+
+    /// Joins base + path (path always starts with "/"; preserves any query
+    /// string). Prepends the `/api/v1` prefix for Contract A/B resource paths;
+    /// `/auth`, `/system`, `/health` (and anything already prefixed) pass through.
     private func url(_ path: String) -> URL {
         let base = baseURL.absoluteString.hasSuffix("/") ? String(baseURL.absoluteString.dropLast()) : baseURL.absoluteString
-        return URL(string: base + path) ?? baseURL
+        let unprefixed = path.hasPrefix("/api/") || path.hasPrefix("/auth/")
+            || path.hasPrefix("/system") || path.hasPrefix("/health")
+        let full = unprefixed ? path : Self.apiPrefix + path
+        return URL(string: base + full) ?? baseURL
     }
 
     private func request(_ path: String, method: String,
