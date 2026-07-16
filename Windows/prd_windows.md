@@ -1,6 +1,6 @@
 # LUDO Desktop — Windows · Product Requirements
 
-Status: placeholder · Target: after macOS · Related: `../MacOS/prd_macos.md` · epic euroblaze/ludo-flywheel#94
+Status: placeholder · Target: after macOS · Related: `../MacOS/prd_macos.md` · epic Ludo-Odoo-Migrations/ludo-webapps#94
 
 The Windows app is **functional parity** with the macOS app — same flow, same screens
 (sign-in → discovery → scope picker → review & launch → monitor), same backend contract.
