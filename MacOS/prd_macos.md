@@ -1,7 +1,7 @@
 # LUDO Desktop — macOS · Product Requirements
 
 Status: draft for hand-off · Owner: product · Target: 0.2.apps
-Related: feature epic euroblaze/ludo-flywheel#94 · engine euroblaze/ludo#466 ·
+Related: feature epic Ludo-Odoo-Migrations/ludo-webapps#94 · engine Ludo-Odoo-Migrations/ludo-agent#466 ·
 `ludo-apps/specs/02_portal.md` · `ludo-apps/specs/04_backend_api.md` · Windows parity `../Windows/prd_windows.md`
 Prototypes: `prototypes/*.png` (+ source `*.html`)
 
@@ -89,7 +89,7 @@ All under the authenticated gateway. Endpoints in **bold** are added by epic #94
 | Status | `GET /migrations/{id}` | state_index, agent_outcome, cost |
 | Live events | `GET /migrations/{id}/events` (SSE) | relayed Contract B (model/job/turn/safety/session_end) |
 
-The agent-side DTO these proxy is defined in euroblaze/ludo#466; the client only ever
+The agent-side DTO these proxy is defined in Ludo-Odoo-Migrations/ludo-agent#466; the client only ever
 sees the apps shape.
 
 ## 6. Screens

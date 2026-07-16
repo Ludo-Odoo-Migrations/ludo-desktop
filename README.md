@@ -10,7 +10,7 @@ broker; only `account_id` crosses, never customer PII.
 | `MacOS/` | macOS 14+ (SwiftUI, universal) | PRD + prototypes ready (`prd_macos.md`, `prototypes/`) |
 | `Windows/` | Windows (stack TBD) | placeholder — parity, after macOS (`prd_windows.md`) |
 
-Feature epic: euroblaze/ludo-flywheel#94 · engine support: euroblaze/ludo#466.
+Feature epic: Ludo-Odoo-Migrations/ludo-webapps#94 · engine support: Ludo-Odoo-Migrations/ludo-agent#466.
 Backend behaviour is authoritative in `MacOS/prd_macos.md`; Windows records only deltas.
 
 This folder is a sibling of `ludo-agent/` and `ludo-apps/` in the workspace; it has its own

@@ -4,7 +4,7 @@ A navigable SwiftUI skeleton of the macOS app (5 screens, mock data, working
 click-through). It is a **click-dummy** for hand-off — the real backend wiring
 (`LiveAPIClient`, the live auth exchange) is stubbed and clearly marked `TODO`.
 
-PRD: `../prd_macos.md` · Prototypes: `../prototypes/` · Epic: euroblaze/ludo-flywheel#94
+PRD: `../prd_macos.md` · Prototypes: `../prototypes/` · Epic: Ludo-Odoo-Migrations/ludo-webapps#94
 
 ## Run it
 
